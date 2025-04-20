@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quadratic Equation Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        :root {
+            --bg-color: #f0f5ff;
+            --text-color: #24294e;
+            --card-bg: white;
+        }
+        body.dark {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        label, input {
+            display: block;
+            width: 100%;
+        }
+        input {
+            padding: 0.6rem;
+            margin-top: 0.3rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 0.6rem 1.2rem;
+            margin-top: 1rem;
+            margin-right: 10px;
+            border: none;
+            background-color: #24294e;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1a1d3b;
+        }
+        .result {
+            margin-top: 2rem;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        pre {
+            white-space: pre-wrap;
+            background: #f8f8ff;
+            padding: 0.75rem;
+            border-left: 4px solid #24294e;
+            border-radius: 5px;
+        }
+        .theme-toggle {
+            float: right;
+            margin-top: -2.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>📘 Quadratic Equation Visualizer</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <div class="container">
+        <form method="POST" action="/">
+            <label for="a">Coefficient a:</label>
+            <input type="number" step="any" name="a" required value="{{ a_val }}">
+
+            <label for="b">Coefficient b:</label>
+            <input type="number" step="any" name="b" required value="{{ b_val }}">
+
+            <label for="c">Coefficient c:</label>
+            <input type="number" step="any" name="c" required value="{{ c_val }}">
+
+            <button type="submit">📊 Visualize</button>
+        </form>
+
+        {% if explanation %}
+        <div class="result">
+            <h2>🧠 Steps & Explanation</h2>
+            <div>{{ explanation|safe }}</div>
+
+            {% if img_base64 %}
+            <img src="data:image/png;base64,{{ img_base64 }}" alt="Quadratic Graph">
+
+            <form method="POST" action="/download_ppt">
+                <input type="hidden" name="a" value="{{ a_val }}">
+                <input type="hidden" name="b" value="{{ b_val }}">
+                <input type="hidden" name="c" value="{{ c_val }}">
+                <button>📥 Download PPT</button>
+            </form>
+            <form method="POST" action="/download_pdf" style="display:inline;">
+                <input type="hidden" name="a" value="{{ a_val }}">
+                <input type="hidden" name="b" value="{{ b_val }}">
+                <input type="hidden" name="c" value="{{ c_val }}">
+                <button>📄 Download PDF</button>
+            </form>
+            <form method="POST" action="/download_png" style="display:inline;">
+                <input type="hidden" name="a" value="{{ a_val }}">
+                <input type="hidden" name="b" value="{{ b_val }}">
+                <input type="hidden" name="c" value="{{ c_val }}">
+                <button>🖼 Download Graph</button>
+            </form>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("dark");
+        }
+    </script>
+</body>
+</html>
